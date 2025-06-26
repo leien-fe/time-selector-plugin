@@ -14,13 +14,13 @@ Time Selector Plugin 是一个轻量级、可定制的时间段选择器，适�
 
 ## 安装
 
-### 通过npm安装
+### 通过 npm 安装
 
 ```bash
 npm install time-selector-plugin
 ```
 
-### 通过CDN引入
+### 通过 CD N引入
 
 ```html
 <script src="https://unpkg.com/time-selector-plugin/dist/time-selector-plugin.umd.js"></script>
@@ -28,7 +28,7 @@ npm install time-selector-plugin
 
 ## 使用方法
 
-### HTML结构
+### HTML 结构
 
 ```html
 <div id="time-selector"></div>
