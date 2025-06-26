@@ -1,0 +1,46 @@
+#time-selector {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid #ddd;
+    user-select: none;
+}
+
+.header, .row {
+    display: flex;
+}
+
+.cell {
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 5px 0;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.cell.empty {
+    width: 80px;
+}
+
+.cell.time-header {
+    width: calc((100% - 80px) / 48);
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.cell.day-header {
+    width: 80px;
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+.cell.time-cell {
+    width: calc((100% - 80px) / 48);
+    height: 20px;
+}
+
+.cell.time-cell.selected {
+    background-color: #007bff;
+    color: white;
+}

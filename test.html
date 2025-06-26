@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="time-selector" style="width: 1000px;height: 1000px;">
+
+</div>
+</body>
+<script src="./dist/index.min.js"></script>
+<script>
+  const container = document.getElementById("time-selector");
+  const timeSelector = new TimeSelector(container);
+
+  // 监听选定后的时间段
+  timeSelector.on("select", (selectedSlots) => {
+    const arr = timeSelector.getAllSelectedSlots();
+    console.log("Selected Time Slots:", { selectedSlots, arr });
+
+  });
+</script>
+</html>
