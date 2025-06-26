@@ -6,7 +6,7 @@
 
 Time Selector Plugin is a lightweight, customizable time slot selector designed for scenarios where users need to select specific date and time ranges. It provides intuitive drag-and-drop selection, supports multiple languages, and can be easily integrated into any web project.
 
-![Time Selector Demo](public/Kapture%202025-06-26%20at%2017.12.50.gif)
+![Time Selector Demo](https://github.com/leien-fe/time-selector-plugin/blob/main/public/Kapture%202025-06-26%20at%2017.12.50.gif?raw=true)
 
 ## Features
 

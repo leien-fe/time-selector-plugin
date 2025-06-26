@@ -1,17 +1,31 @@
 {
   "name": "time-selector-plugin",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.js",
+  "version": "1.0.3",
+  "description": "A lightweight and customizable time selector plugin with multi-language support and intuitive drag-and-drop functionality.",
+  "main": "dist/time-selector-plugin.umd.js",
+  "module": "dist/time-selector-plugin.esm.js",
   "type": "module",
   "scripts": {
     "dev": "vite demo",
     "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "time-selector",
+    "time-picker",
+    "time-slot",
+    "plugin",
+    "javascript",
+    "multi-language"
+  ],
+  "author": "leien-fe",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md",
+    "README_zh-CN.md",
+    "LICENSE"
+  ],
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",

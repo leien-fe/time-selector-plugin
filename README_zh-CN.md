@@ -4,7 +4,7 @@
 
 Time Selector Plugin 是一个轻量级、可定制的时间段选择器，适用于需要用户选择特定日期和时间范围的场景。它提供直观的拖拽选择功能，支持多种语言，并可轻松集成到任何Web项目中。
 
-![时间选择器演示](public/Kapture%202025-06-26%20at%2017.12.50.gif)
+![时间选择器演示](https://github.com/leien-fe/time-selector-plugin/blob/main/public/Kapture%202025-06-26%20at%2017.12.50.gif?raw=true)
 
 ## 特性
 
