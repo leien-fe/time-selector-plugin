@@ -406,7 +406,7 @@ export default class TimeSelector {
         this.selectedTimeSlots.length = 0;
 
         cells.forEach((cell) => {
-            const isSelected = !(cell.dataset.selected === 'false');
+            const isSelected = cell.dataset.selected === 'true';
             cell.dataset.selected = isSelected ? "false" : "true";
             cell.classList.toggle("selected", !isSelected);
 

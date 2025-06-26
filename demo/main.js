@@ -60,23 +60,3 @@ initTimeSelector(languageSelect.value);
 languageSelect.addEventListener("change", (e) => {
     initTimeSelector(e.target.value);
 });
-
-// 监听选定后的时间段
-timeSelector.on("select", (selectedSlots) => {
-    const arr = timeSelector.getAllSelectedSlots();
-    console.log("Selected Time Slots:", { selectedSlots, arr });
-});
-
-timeSelector.on("clear", (selectedSlots) => {
-    const arr = timeSelector.getAllSelectedSlots();
-    console.log("clear Time Slots:", { selectedSlots, arr });
-
-});
-
-btn1.addEventListener("click", (e) => {
-    timeSelector.reverseSelection();
-})
-
-btn2.addEventListener("click", (e) => {
-    timeSelector.clearAllSelectedSlots();
-})
