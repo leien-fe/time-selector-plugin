@@ -1,3 +1,5 @@
+import './styles.css';
+
 export default class TimeSelector {
     innerContainer = null;
     classNameMap = {};
@@ -25,9 +27,10 @@ export default class TimeSelector {
         this.isSelecting = false;
         this.startCell = null;
         this.endCell = null;
-        this.selectedTimeSlots = [];
+        this.cells = []; // Cache for cell elements
+        this.temporaryCells = []; // Cache for temporary cells
+        this.selectionState = []; // State for selected cells
         this.classPrefix = 'time-selector';
-        this.classSuffix = `${Math.random().toString(36).substr(2, 6)}`;
         this.options = options;
         this.currentLanguage = options.language || 'zh-CN'; // 默认中文
         this.language = this.languages[this.currentLanguage];
@@ -38,8 +41,6 @@ export default class TimeSelector {
     init() {
         /** 创建 class */
         this.createClassMap();
-        /** 创建样式表 */
-        this.createStyleSheet();
         /** 创建子容器 */
         this.createInnerContainer();
         /** 创建时间表头 */
@@ -224,6 +225,8 @@ export default class TimeSelector {
         this.language.days.forEach((day, rowIndex) => {
             const row = document.createElement("div");
             row.classList.add("row");
+            this.cells[rowIndex] = []; // Create a row in the cache
+            this.selectionState[rowIndex] = []; // Create a row in the state
 
             // 星期列头
             const dayCell = document.createElement("div");
@@ -238,13 +241,15 @@ export default class TimeSelector {
                 for (let halfHour = 0; halfHour < 2; halfHour++) {
                     const cell = document.createElement("div");
                     const cellBox = document.createElement("div");
+                    const colIndex = hour * 2 + halfHour;
                     cell.classList.add("cell", "time-cell");
                     cellBox.classList.add("cell-box");
                     cell.dataset.row = rowIndex;
-                    cell.dataset.col = hour * 2 + halfHour; // 每小时拆成两个半小时
-                    cell.dataset.selected = "false";
+                    cell.dataset.col = colIndex; // 每小时拆成两个半小时
+                    this.selectionState[rowIndex][colIndex] = false; // Initialize state
                     cellBox.appendChild(cell);
                     row.appendChild(cellBox);
+                    this.cells[rowIndex][colIndex] = cell; // Cache the cell element
                 }
             }
 
@@ -289,6 +294,12 @@ export default class TimeSelector {
 
         this.endCell = currentCell;
 
+        // Clear previous temporary selection from cache
+        this.temporaryCells.forEach((cell) => {
+            cell.classList.remove("temporary");
+        });
+        this.temporaryCells = [];
+
         const startRow = parseInt(this.startCell.dataset.row);
         const startCol = parseInt(this.startCell.dataset.col);
         const endRow = parseInt(this.endCell.dataset.row);
@@ -299,76 +310,60 @@ export default class TimeSelector {
         const minCol = Math.min(startCol, endCol);
         const maxCol = Math.max(startCol, endCol);
 
-        this.innerContainer.querySelectorAll(".time-cell.temporary").forEach((cell) => {
-            cell.classList.remove("temporary");
-        });
-
         for (let row = minRow; row <= maxRow; row++) {
             for (let col = minCol; col <= maxCol; col++) {
-                const cell = this.innerContainer.querySelector(`.time-cell[data-row="${row}"][data-col="${col}"]`);
+                const cell = this.cells[row] && this.cells[row][col];
                 if (cell) {
                     cell.classList.add("temporary");
+                    this.temporaryCells.push(cell); // Add to temporary cache
                 }
             }
         }
     }
 
     finalizeSelection() {
-        const temporaryCells = this.innerContainer.querySelectorAll(".time-cell.temporary");
-        temporaryCells.forEach((cell) => {
-            const isSelected = !(cell.dataset.selected === 'false');
-            cell.dataset.selected = isSelected ? "false" : "true";
-            cell.classList.toggle("selected", !isSelected);
+        this.temporaryCells.forEach((cell) => {
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+            this.selectionState[row][col] = !this.selectionState[row][col]; // Toggle state
             cell.classList.remove("temporary");
+        });
 
-            if (!isSelected) {
-                this.selectedTimeSlots.push({
-                    day: parseInt(cell.dataset.row),
-                    time: parseInt(cell.dataset.col),
-                });
-            }
+        this.temporaryCells = []; // Clear the cache
+        this.render();
+        this.emit("select", this.getAllSelectedSlots());
+    }
+
+    render() {
+        this.selectionState.forEach((rowState, rowIndex) => {
+            rowState.forEach((isSelected, colIndex) => {
+                const cell = this.cells[rowIndex][colIndex];
+                if (cell) {
+                    cell.classList.toggle("selected", isSelected);
+                }
+            });
         });
     }
 
     selectRow(rowIndex) {
-        const rowCells = this.innerContainer.querySelectorAll(`.time-cell[data-row="${rowIndex}"]`);
-        const isRowSelected = Array.from(rowCells).every((cell) => cell.dataset.selected === "true");
-        if (isRowSelected) this.selectedTimeSlots.length = 0;
-        rowCells.forEach((cell) => {
-            cell.dataset.selected = isRowSelected ? "false" : "true";
-            cell.classList.toggle("selected", !isRowSelected);
+        const rowState = this.selectionState[rowIndex] || [];
+        const isRowSelected = rowState.every(isSelected => isSelected);
 
-            if (!isRowSelected) {
-                this.selectedTimeSlots.push({
-                    day: rowIndex,
-                    time: parseInt(cell.dataset.col),
-                });
-            }
-        });
-
-        this.emit("select", this.selectedTimeSlots.slice());
+        this.selectionState[rowIndex] = rowState.map(() => !isRowSelected);
+        this.render();
+        this.emit("select", this.getAllSelectedSlots());
     }
 
     selectCol(colIndex) {
-        const colCells1 = this.container.querySelectorAll(`.time-cell[data-col="${colIndex * 2}"]`);
-        const colCells2 = this.container.querySelectorAll(`.time-cell[data-col="${colIndex * 2 + 1}"]`);
-        const colCells = Array.from(colCells1).concat(...colCells2);
-        const isColSelected = colCells.every((cell) => cell.dataset.selected === "true");
-        if (isColSelected) this.selectedTimeSlots.length = 0;
+        const isColSelected = this.selectionState.every(rowState => rowState[colIndex * 2] && rowState[colIndex * 2 + 1]);
 
-        colCells.forEach((cell) => {
-            cell.dataset.selected = isColSelected ? "false" : "true";
-            cell.classList.toggle("selected", !isColSelected);
+        for (let i = 0; i < this.selectionState.length; i++) {
+            this.selectionState[i][colIndex * 2] = !isColSelected;
+            this.selectionState[i][colIndex * 2 + 1] = !isColSelected;
+        }
 
-            if (!isColSelected) {
-                this.selectedTimeSlots.push({
-                    day: parseInt(cell.dataset.row),
-                    time: parseInt(cell.dataset.col),
-                });
-            }
-        });
-
-        this.emit("select", this.selectedTimeSlots.slice());
+        this.render();
+        this.emit("select", this.getAllSelectedSlots());
     }
 
     selectHalfDay(after = false) {
@@ -380,67 +375,37 @@ export default class TimeSelector {
     }
 
     selectAll() {
-        const cellsDom = this.container.querySelectorAll(".time-cell");
-        const cells = Array.from(cellsDom);
-        const isAllSelected = cells.every((cell) => cell.dataset.selected === "true");
-        if (isAllSelected) this.selectedTimeSlots.length = 0;
-
-        cells.forEach((cell) => {
-            cell.dataset.selected = isAllSelected ? "false" : "true";
-            cell.classList.toggle("selected", !isAllSelected);
-
-            if (!isAllSelected) {
-                this.selectedTimeSlots.push({
-                    day: parseInt(cell.dataset.row),
-                    time: parseInt(cell.dataset.col),
-                });
-            }
-        });
-
-        this.emit("select", this.selectedTimeSlots.slice());
+        const isAllSelected = this.selectionState.flat().every(isSelected => isSelected);
+        this.selectionState = this.selectionState.map(row => row.map(() => !isAllSelected));
+        this.render();
+        this.emit("select", this.getAllSelectedSlots());
     }
 
     reverseSelection() {
-        const cellsDom = this.container.querySelectorAll(".time-cell");
-        const cells = Array.from(cellsDom);
-        this.selectedTimeSlots.length = 0;
-
-        cells.forEach((cell) => {
-            const isSelected = cell.dataset.selected === 'true';
-            cell.dataset.selected = isSelected ? "false" : "true";
-            cell.classList.toggle("selected", !isSelected);
-
-            if (!isSelected) {
-                this.selectedTimeSlots.push({
-                    day: parseInt(cell.dataset.row),
-                    time: parseInt(cell.dataset.col),
-                });
-            }
-        });
-
-        this.emit("select", this.selectedTimeSlots.slice());
+        this.selectionState = this.selectionState.map(row => row.map(isSelected => !isSelected));
+        this.render();
+        this.emit("select", this.getAllSelectedSlots());
     }
 
     getAllSelectedSlots() {
-        const cells = this.innerContainer.querySelectorAll(`.time-cell[data-selected="true"]`);
-        const selectedTimeSlots = [];
-        cells.forEach((cell) => {
-            selectedTimeSlots.push({
-                day: parseInt(cell.dataset.row),
-                time: parseInt(cell.dataset.col),
+        const selectedSlots = [];
+        this.selectionState.forEach((row, rowIndex) => {
+            row.forEach((isSelected, colIndex) => {
+                if (isSelected) {
+                    selectedSlots.push({
+                        day: rowIndex,
+                        time: colIndex,
+                    });
+                }
             });
         });
-        return selectedTimeSlots;
+        return selectedSlots;
     }
 
     clearAllSelectedSlots() {
-        const cells = this.innerContainer.querySelectorAll(`.time-cell[data-selected="true"]`);
-        cells.forEach((cell) => {
-            cell.dataset.selected = "false";
-            cell.classList.toggle("selected", false);
-        });
-        this.selectedTimeSlots.length = 0;
-        this.emit("clear", this.selectedTimeSlots.slice());
+        this.selectionState = this.selectionState.map(row => row.map(() => false));
+        this.render();
+        this.emit("clear", []);
     }
 
     on(event, handler) {
