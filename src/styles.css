@@ -1,46 +1,96 @@
-#time-selector {
+.time-selector-container {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    border: 1px solid #ddd;
     user-select: none;
+    overflow: hidden;
 }
-
-.header, .row {
+.time-selector-container .time-selector-header,
+.time-selector-container .row {
     display: flex;
+    flex: 1;
 }
-
-.cell {
-    border: 1px solid #ddd;
+.time-selector-second-header {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    cursor: pointer;
+}
+.time-selector-container .cell {
     box-sizing: border-box;
     text-align: center;
     padding: 5px 0;
     font-size: 12px;
-    cursor: pointer;
+    position: relative;
 }
-
-.cell.empty {
+.time-selector-container .cell.empty {
     width: 80px;
 }
-
-.cell.time-header {
+.time-selector-container .cell.time-header {
     width: calc((100% - 80px) / 48);
     font-size: 10px;
     white-space: nowrap;
+    cursor: pointer;
 }
-
-.cell.day-header {
+.time-selector-container .cell.day-header {
     width: 80px;
     background-color: #f8f8f8;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1px;
+    cursor: pointer;
 }
-
-.cell.time-cell {
-    width: calc((100% - 80px) / 48);
-    height: 20px;
+.time-selector-container .cell-box {
+    display: flex;
+    flex: 1;
+    padding: 0 1px 1px 0;
+    cursor: cell;
 }
-
-.cell.time-cell.selected {
+.time-selector-container .cell.time-cell {
+    flex: 1;
+    cursor: cell;
+    background-color: #f0f0f0;
+    border-radius: 2px;
+    overflow: hidden;
+    transition: background-color 0.1s;
+}
+.time-selector-container .cell.time-cell:hover {
+    background-color: #b2b0b0;
+}
+.time-selector-container .cell.time-cell.selected {
     background-color: #007bff;
     color: white;
+}
+.time-selector-container .cell.time-cell.temporary {
+    background-color: #007bff91;
+}
+.time-selector-header-row {
+    width: 100%;
+    display: flex;
+    flex: 1;
+    margin-bottom: 1px;
+}
+.time-selector-container .header-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    background-color: #f0f0f0;
+}
+.time-selector-container .header-cell:first-child {
+    margin-right: 1px;
+}
+.time-selector-container .hour-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    background-color: #f9f9f9;
+    margin-left: 1px;
+}
+.time-selector-container .day-header {
+    background-color: #d9f7be;
 }

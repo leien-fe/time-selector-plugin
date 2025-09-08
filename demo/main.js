@@ -1,3 +1,4 @@
+import '../src/styles.css';
 import TimeSelector from '../src/index.js'
 const container = document.getElementById("time-selector");
 const btn1 = document.getElementById("btn1");
