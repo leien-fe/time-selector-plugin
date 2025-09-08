@@ -155,7 +155,7 @@ export default class TimeSelector {
     }
 
     createClassName(name) {
-        return `${this.classPrefix}-${name}_${this.classSuffix}`;
+        return `${this.classPrefix}-${name}`;
     }
 
     createClassMap() {
@@ -282,8 +282,8 @@ export default class TimeSelector {
                 if (this.isSelecting) {
                     this.isSelecting = false;
                     this.finalizeSelection();
-                    this.emit("select", this.selectedTimeSlots.slice()); // 抛出选中的时间段数据
-                    this.selectedTimeSlots.length = 0; // 清空临时存储
+                    this.emit("select", this.getAllSelectedSlots().slice()); // 抛出选中的时间段数据
+                    // this.selectedTimeSlots.length = 0; // 清空临时存储
                 }
             });
         });
