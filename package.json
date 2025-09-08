@@ -1,6 +1,6 @@
 {
   "name": "time-selector-plugin",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "A lightweight and customizable time selector plugin with multi-language support and intuitive drag-and-drop functionality.",
   "main": "dist/time-selector-plugin.umd.js",
   "module": "dist/time-selector-plugin.esm.js",
