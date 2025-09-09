@@ -88,7 +88,7 @@ timeSelector.on("clear", () => {
 
 ## Changelog
 
-### [v1.1.0] - 2025-09-09
+### [v1.2.0] - 2025-09-09
 
 **Added**
 - `initialSelection` option to set selected time slots upon initialization.
