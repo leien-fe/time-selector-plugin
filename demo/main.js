@@ -7,6 +7,7 @@ const btn3 = document.getElementById("btn3");
 const btn4 = document.getElementById("btn4");
 const btn5 = document.getElementById("btn5");
 const btn6 = document.getElementById("btn6");
+const btn7 = document.getElementById("btn7");
 const languageSelect = document.getElementById("language-select");
 
 let timeSelector = null;
@@ -16,7 +17,14 @@ function initTimeSelector(language) {
         timeSelector.off(); // 解绑旧的事件监听
         container.innerHTML = ''; // 清空容器内容
     }
-    timeSelector = new TimeSelector(container, { language: language });
+    timeSelector = new TimeSelector(container, {
+        language: language,
+        initialSelection: [
+            { day: 0, time: 10 },
+            { day: 0, time: 11 },
+            { day: 0, time: 12 },
+        ]
+    });
 
     // 监听选定后的时间段
     timeSelector.on("select", (selectedSlots) => {
@@ -51,6 +59,14 @@ function initTimeSelector(language) {
 
     btn6.onclick = () => {
         timeSelector.selectAll(); // Select all time slots
+    };
+
+    btn7.onclick = () => {
+        timeSelector.setSelectedSlots([
+            { day: 1, time: 20 },
+            { day: 1, time: 21 },
+            { day: 1, time: 22 },
+        ]);
     };
 }
 

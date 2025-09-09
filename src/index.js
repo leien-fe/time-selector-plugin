@@ -255,6 +255,10 @@ export default class TimeSelector {
 
             this.innerContainer.appendChild(row);
         });
+
+        if (this.options.initialSelection) {
+            this.setSelectedSlots(this.options.initialSelection, false);
+        }
     }
 
     bindEvents() {
@@ -402,10 +406,27 @@ export default class TimeSelector {
         return selectedSlots;
     }
 
+    setSelectedSlots(slots, emitEvent = true) {
+        this.selectionState = this.selectionState.map(row => row.map(() => false));
+        if (slots && Array.isArray(slots)) {
+            slots.forEach(slot => {
+                const { day, time } = slot;
+                if (this.selectionState[day] && this.selectionState[day][time] !== undefined) {
+                    this.selectionState[day][time] = true;
+                }
+            });
+        }
+        this.render();
+        if (emitEvent) {
+            this.emit("select", this.getAllSelectedSlots());
+        }
+    }
+
     clearAllSelectedSlots() {
+        const clearedSlots = this.getAllSelectedSlots();
         this.selectionState = this.selectionState.map(row => row.map(() => false));
         this.render();
-        this.emit("clear", []);
+        this.emit("clear", clearedSlots);
     }
 
     on(event, handler) {
