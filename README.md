@@ -54,6 +54,7 @@ const timeSelector = new TimeSelector(container, {
 | Option     | Type     | Default Value | Description                               |
 | -------- | -------- | -------- | ----------------------------------------- |
 | `language` | `string` | `'zh-CN'` | Sets the display language of the plugin, can be `'zh-CN'` or `'en-US'`. |
+| `initialSelection` | `Array` | `[]` | Sets the initially selected time slots. Each element is an object like `{ day: number, time: number }`. |
 
 ### Event Listening
 
@@ -76,6 +77,7 @@ timeSelector.on("clear", () => {
 | -------------------- | ----------------------------------------------- |
 | `reverseSelection()` | Inverts the selection of all currently selected time slots. |
 | `getAllSelectedSlots()` | Retrieves all selected time slots. Returns an array, where each element contains `day` (day index, 0-6) and `time` (time index, 0-47, representing half-hour intervals). |
+| `setSelectedSlots(slots)` | Clears the current selection and sets a new selection based on the provided `slots` array. |
 | `clearAllSelectedSlots()` | Clears all selected time slots.                 |
 | `selectRow(rowIndex)` | Selects or deselects a specific row (day). `rowIndex` is 0-6. |
 | `selectCol(colIndex)` | Selects or deselects a specific column (half-hour interval). `colIndex` is 0-47. |
@@ -83,6 +85,17 @@ timeSelector.on("clear", () => {
 | `selectAll()`        | Selects or deselects all time slots.            |
 | `on(event, handler)` | Registers an event listener.                    |
 | `off()`              | Removes all event listeners.                    |
+
+## Changelog
+
+### [v1.1.0] - 2025-09-09
+
+**Added**
+- `initialSelection` option to set selected time slots upon initialization.
+- `setSelectedSlots(slots)` method to programmatically update the selection at any time.
+
+**Changed**
+- The `clear` event now emits the list of slots that were cleared, instead of an empty array.
 
 ## Contributing
 

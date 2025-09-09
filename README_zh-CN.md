@@ -52,6 +52,7 @@ const timeSelector = new TimeSelector(container, {
 | 选项     | 类型     | 默认值   | 描述                               |
 | -------- | -------- | -------- | ---------------------------------- |
 | `language` | `string` | `'zh-CN'` | 设置插件的显示语言，可选 `'zh-CN'` 或 `'en-US'`。 |
+| `initialSelection` | `Array` | `[]` | 设置初始选中的时间段。每个元素是一个类似 `{ day: number, time: number }` 的对象。 |
 
 ### 事件监听
 
@@ -74,6 +75,7 @@ timeSelector.on("clear", () => {
 | -------------------- | ---------------------------------------- |
 | `reverseSelection()` | 反选当前所有已选中的时间段。             |
 | `getAllSelectedSlots()` | 获取所有已选中的时间段。返回一个数组，每个元素包含 `day` (星期索引，0-6) 和 `time` (时间索引，0-47，表示半小时)。 |
+| `setSelectedSlots(slots)` | 清空当前选区并根据提供的 `slots` 数组设置新的选区。 |
 | `clearAllSelectedSlots()` | 清空所有已选中的时间段。                 |
 | `selectRow(rowIndex)` | 选中或取消选中指定行（星期）。`rowIndex` 为 0-6。 |
 | `selectCol(colIndex)` | 选中或取消选中指定列（半小时）。`colIndex` 为 0-47。 |
@@ -81,6 +83,17 @@ timeSelector.on("clear", () => {
 | `selectAll()`        | 选中或取消选中所有时间段。               |
 | `on(event, handler)` | 注册事件监听器。                         |
 | `off()`              | 移除所有事件监听器。                     |
+
+## 更新日志
+
+### [v1.1.0] - 2025-09-09
+
+**新增**
+- `initialSelection` 选项，用于在初始化时设置选中的时间段。
+- `setSelectedSlots(slots)` 方法，用于在任何时候以编程方式更新选区。
+
+**变更**
+- `clear` 事件现在会发送被清除的时间段列表，而不是一个空数组。
 
 ## 贡献
 
